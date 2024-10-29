@@ -2,11 +2,9 @@
 
 namespace BeyondCode\DuskDashboard\Dusk\Concerns;
 
-trait InteractsWithMouse
-{
+trait InteractsWithMouse {
     /** {@inheritdoc} */
-    public function moveMouse($xOffset, $yOffset)
-    {
+    public function moveMouse($xOffset, $yOffset) {
         $previousHtml = $this->getCurrentPageSource();
 
         $browser = parent::moveMouse($xOffset, $yOffset);
@@ -17,8 +15,7 @@ trait InteractsWithMouse
     }
 
     /** {@inheritdoc} */
-    public function mouseover($selector)
-    {
+    public function mouseover($selector) {
         $previousHtml = $this->getCurrentPageSource();
 
         $browser = parent::mouseover($selector);
@@ -29,8 +26,7 @@ trait InteractsWithMouse
     }
 
     /** {@inheritdoc} */
-    public function click($selector = null)
-    {
+    public function click($selector = null) {
         $previousHtml = $this->getCurrentPageSource();
 
         $browser = parent::click($selector);
@@ -41,22 +37,20 @@ trait InteractsWithMouse
     }
 
     /** {@inheritdoc} */
-    public function clickAndHold()
-    {
+    public function clickAndHold($selector = null) {
         $previousHtml = $this->getCurrentPageSource();
 
-        $browser = parent::clickAndHold();
+        $browser = parent::clickAndHold($selector);
 
         $this->actionCollector->collect(__FUNCTION__, func_get_args(), $this, $previousHtml);
 
         return $browser;
     }
 
-    public function doubleClick()
-    {
+    public function doubleClick($selector = null) {
         $previousHtml = $this->getCurrentPageSource();
 
-        $browser = parent::doubleClick();
+        $browser = parent::doubleClick($selector);
 
         $this->actionCollector->collect(__FUNCTION__, func_get_args(), $this, $previousHtml);
 
@@ -64,8 +58,7 @@ trait InteractsWithMouse
     }
 
     /** {@inheritdoc} */
-    public function rightClick($selector = null)
-    {
+    public function rightClick($selector = null) {
         $previousHtml = $this->getCurrentPageSource();
 
         $browser = parent::rightClick($selector);
@@ -76,8 +69,7 @@ trait InteractsWithMouse
     }
 
     /** {@inheritdoc} */
-    public function releaseMouse()
-    {
+    public function releaseMouse() {
         $previousHtml = $this->getCurrentPageSource();
 
         $browser = parent::releaseMouse();

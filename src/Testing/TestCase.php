@@ -11,18 +11,17 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Laravel\Dusk\TestCase as BaseTestCase;
+use PHPUnit\Runner\Version;
 use Throwable;
 
-abstract class TestCase extends BaseTestCase
-{
+abstract class TestCase extends BaseTestCase {
     /**
      * Create a new Browser instance.
      *
      * @param  \Facebook\WebDriver\Remote\RemoteWebDriver  $driver
      * @return \BeyondCode\DuskDashboard\Dusk\Browser
      */
-    protected function newBrowser($driver)
-    {
+    protected function newBrowser($driver) {
         return new Browser($driver);
     }
 
@@ -33,8 +32,7 @@ abstract class TestCase extends BaseTestCase
      * @return array
      * @throws \ReflectionException
      */
-    protected function createBrowsersFor(Closure $callback)
-    {
+    protected function createBrowsersFor(Closure $callback) {
         $browsers = parent::createBrowsersFor($callback);
 
         foreach ($browsers as $browser) {
@@ -46,40 +44,40 @@ abstract class TestCase extends BaseTestCase
         return static::$browsers;
     }
 
-    protected function getTestName()
-    {
-        return class_basename(static::class).'::'.$this->getName();
+    protected function getTestName() {
+        $name = version_compare(Version::id(), "10", ">=") ? $this->name() : $this->getName(false); // @phpstan-ignore-line
+        return class_basename(static::class) . "::" . $name;
     }
 
-    protected function enableNetworkLogging(DesiredCapabilities $capabilities): DesiredCapabilities
-    {
+    protected function enableNetworkLogging(
+        DesiredCapabilities $capabilities
+    ): DesiredCapabilities {
         $chromeOptions = $capabilities->getCapability(ChromeOptions::CAPABILITY);
 
         $perfLoggingPrefs = new \stdClass();
         $perfLoggingPrefs->enableNetwork = true;
 
-        $chromeOptions->setExperimentalOption('perfLoggingPrefs', $perfLoggingPrefs);
+        $chromeOptions->setExperimentalOption("perfLoggingPrefs", $perfLoggingPrefs);
 
         $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
 
         $loggingPrefs = new \stdClass();
-        $loggingPrefs->browser = 'ALL';
-        $loggingPrefs->performance = 'ALL';
+        $loggingPrefs->browser = "ALL";
+        $loggingPrefs->performance = "ALL";
 
-        $capabilities->setCapability('loggingPrefs', $loggingPrefs);
+        $capabilities->setCapability("loggingPrefs", $loggingPrefs);
 
         return $capabilities;
     }
 
-    protected function onNotSuccessfulTest(Throwable $t): void
-    {
+    protected function onNotSuccessfulTest(Throwable $t): never {
         try {
-            (new Client())->post('http://127.0.0.1:'.StartDashboardCommand::PORT.'/events', [
+            (new Client())->post("http://127.0.0.1:" . StartDashboardCommand::PORT . "/events", [
                 RequestOptions::JSON => [
-                    'channel' => 'dusk-dashboard',
-                    'name' => 'dusk-failure',
-                    'data' => [
-                        'message' => $t->getMessage(),
+                    "channel" => "dusk-dashboard",
+                    "name" => "dusk-failure",
+                    "data" => [
+                        "message" => $t->getMessage(),
                     ],
                 ],
             ]);

@@ -8,7 +8,7 @@ use BeyondCode\DuskDashboard\Ratchet\Http\EventController;
 use BeyondCode\DuskDashboard\Ratchet\Server\App;
 use BeyondCode\DuskDashboard\Ratchet\Socket;
 use BeyondCode\DuskDashboard\Watcher;
-use Clue\React\Buzz\Browser;
+use React\Http\Browser;
 use Illuminate\Console\Command;
 use Ratchet\WebSocket\WsServer;
 use React\EventLoop\Factory as LoopFactory;
